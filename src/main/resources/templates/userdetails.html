@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="https://www.thymeleaf.org" xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity3" lang="en">
+<head>
+    <title>User not found</title>
+    <style>
+        .logout {
+            position: absolute;
+            top: 0.5rem;
+            right: 1rem;
+            font-size: 1.25rem;
+        }
+
+        .home {
+            position: absolute;
+            top: 2.5rem;
+            right: 1rem;
+            font-size: 1.25rem;
+        }
+    </style>
+</head>
+<body>
+<h3>User not found!</h3>
+<a class="logout" th:href="@{/logout}">Logout</a>
+<a class="home" th:href="@{/admin/all}">Home</a>
+</body>
+</html>

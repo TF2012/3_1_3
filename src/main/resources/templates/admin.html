@@ -1,0 +1,342 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="https://www.thymeleaf.org">
+<head>
+    <title>Welcome to Admin page</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <style>
+        .height-full {
+            height: 100vh;
+        }
+    </style>
+
+</head>
+<body>
+<nav class="navbar navbar-light bg-dark">
+    <div id="navbar" class="navbar-brand text-light">
+        <span class="fw-bold" th:text="${currentUser.email}">...</span>
+        <span> with roles: </span>
+        <span th:each="role : ${currentUser.roles}"
+              th:text="${role.roleName.replaceFirst('ROLE_', '  ')}">
+            </span>
+    </div>
+    <div>
+        <a class="nav-link text-secondary" th:href="@{/logout}">Logout</a>
+    </div>
+</nav>
+
+
+
+<div class="d-flex align-items-start">
+    <div class="col-2">
+        <div class="nav flex-column nav-pills me-3" id="v-pills-tab" role="tablist" aria-orientation="vertical">
+            <button class="text-left nav-link active" id="v-pills-admin-tab" data-bs-toggle="pill" data-bs-target="#v-pills-admin" type="button" role="tab" aria-controls="v-pills-admin" aria-selected="true">Admin</button>
+            <button class="text-left nav-link" id="v-pills-user-tab" data-bs-toggle="pill" data-bs-target="#v-pills-user" type="button" role="tab" aria-controls="v-pills-user" aria-selected="false">User</button>
+        </div>
+    </div>
+    <div class="container-fluid height-full bg-light">
+        <div class="col-10 ">
+            <div class="tab-content mt-2" id="v-pills-tabContent">
+                <div class="tab-pane fade show active" id="v-pills-admin" role="tabpanel" aria-labelledby="v-pills-admin-tab" tabindex="0">
+                    <p class="fw-bold mt-3 display-6">Admin panel</p>
+                    <ul class="nav nav-tabs" id="innerTab" role="tablist">
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link active" id="allusers-tab" data-bs-toggle="tab" data-bs-target="#allusers" type="button" role="tab" aria-controls="allusers" aria-selected="true">All users</button>
+                        </li>
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link" id="newuser-tab" data-bs-toggle="tab" data-bs-target="#newuser" type="button" role="tab" aria-controls="newuser" aria-selected="false">New user</button>
+                        </li>
+                    </ul>
+                    <div class="tab-content" id="innerTabContent">
+                        <div class="tab-pane fade show active" id="allusers" role="tabpanel" aria-labelledby="allusers-tab">
+                            <div class="container">
+                                <div class="row ">
+                                    <div class="col">
+                                        <h4 class="fw-bold ">All users</h4>
+                                    </div>
+                                </div>
+                            </div>
+                            <div>
+                                <table class="table table-striped bg-white border">
+                                    <thead>
+                                    <tr>
+                                        <th>Id</th>
+                                        <th>Username</th>
+                                        <th>Age</th>
+                                        <th>Email</th>
+                                        <th>Role</th>
+                                        <th>Edit</th>
+                                        <th>Delete</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    <tr th:each="user : ${users}">
+                                        <td th:utext="${user.id}">...</td>
+                                        <td th:utext="${user.username}">...</td>
+                                        <td th:utext="${user.email}">...</td>
+                                        <td th:utext="${user.age}">...</td>
+                                        <td> <span th:each="role : ${user.roles}"
+                                                   th:text="${role.roleName.replaceFirst('ROLE_', '  ')}">
+                                                </span>
+                                        </td>
+                                        <td>
+                                            <button type="button" class="btn btn-info"
+                                                    data-bs-toggle="modal" th:data-bs-target="'#edit' + ${user.id}">
+                                                Edit
+                                            </button>
+                                        </td>
+                                        <td>
+                                            <button type="button" class="btn btn-danger"
+                                                    data-bs-toggle="modal" th:data-bs-target="'#delete' + ${user.id}">
+                                                Delete
+                                            </button>
+                                        </td>
+                                        <div class="modal fade" tabindex="-1" th:id="'edit' + ${user.id}" role="dialog" aria-labelledby="editModalLabel" aria-hidden="true">
+                                            <div class="modal-dialog modal-dialog-scrollable" role="document">
+                                                <div class="modal-content">
+                                                    <div class="modal-header">
+                                                        <h5 class="modal-title">Edit user</h5>
+                                                        <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
+                                                            <span aria-hidden="true">&times;</span>
+                                                        </button>
+                                                    </div>
+                                                    <div class="modal-body text-center">
+                                                        <form th:method="POST" th:action="@{/admin/update(id=${user.id})}" th:object="${user}">
+                                                            <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
+                                                            <div class="container">
+                                                                <div class="row justify-content-center ">
+                                                                    <div class="col-7">
+                                                                        <div class="mb-1">
+                                                                            <label class="fw-bold" for="username">Username:</label>
+                                                                        </div>
+                                                                        <div class="mb-2">
+                                                                            <input type="text" name="username"  th:value="*{username}" id="username" required/>
+                                                                        </div>
+                                                                        <div class="mb-1">
+                                                                            <label class="fw-bold" for="userPassword">Password:</label>
+                                                                        </div>
+                                                                        <div class="mb-2">
+                                                                            <input type="password" th:field="*{password}" id="userPassword" required/>
+                                                                        </div>
+                                                                        <div class="mb-1">
+                                                                            <label class="fw-bold" for="email">Email:</label>
+                                                                        </div>
+                                                                        <div class="mb-2">
+                                                                            <input type="email" name="email" th:value="*{email}" id="email" required />
+                                                                        </div>
+                                                                        <div class="mb-1">
+                                                                            <label class="fw-bold" for="age">Age:</label>
+                                                                        </div>
+                                                                        <div class="mb-2">
+                                                                            <input type="number" class="form-control" min="0" max="120" name="age" th:value="*{age}" id="age" required />
+                                                                        </div>
+                                                                        <div class="mb-1">
+                                                                            <label class="fw-bold">Role</label>
+                                                                        </div>
+                                                                        <div class="mb-2">
+                                                                            <select class="form-select"
+                                                                                    aria-label="Role selection"
+                                                                                    id="roles"
+                                                                                    name="roles" multiple="multiple" size="2">
+                                                                                <option th:each="r : ${roleList}"
+                                                                                        th:value="${r.id}"
+                                                                                        th:text="${r.roleName}"
+                                                                                        th:selected="${user.roles.contains(r)}">
+                                                                                </option>
+                                                                            </select>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                            <div class="modal-footer">
+                                                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                                                <button type="submit" class="btn btn-primary">Edit</button>
+                                                            </div>
+                                                        </form>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="modal fade" tabindex="-1" th:id="'delete' + ${user.id}" role="dialog" aria-labelledby="deleteModalLabel" aria-hidden="true">
+                                            <div class="modal-dialog modal-dialog-scrollable" role="document">
+                                                <div class="modal-content">
+                                                    <div class="modal-header">
+                                                        <h5 class="modal-title">Delete user</h5>
+                                                        <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
+                                                            <span aria-hidden="true">&times;</span>
+                                                        </button>
+                                                    </div>
+                                                    <div class="modal-body text-center">
+                                                        <form th:method="POST" th:action="@{/admin/delete(id=${user.id})}" th:object="${user}">
+                                                            <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
+                                                            <div class="container">
+                                                                <div class="row justify-content-center ">
+                                                                    <div class="col-7">
+                                                                        <div class="mb-1">
+                                                                            <label class="fw-bold" for="delete-username">Username:</label>
+                                                                        </div>
+                                                                        <div class="mb-2">
+                                                                            <input type="text" name="username"  th:value="*{username}" id="delete-username" disabled/>
+                                                                        </div>
+                                                                        <div class="mb-1">
+                                                                            <label class="fw-bold" for="delete-email">Email:</label>
+                                                                        </div>
+                                                                        <div class="mb-2">
+                                                                            <input type="email" name="email" th:value="*{email}" id="delete-email" disabled />
+                                                                        </div>
+                                                                        <div class="mb-1">
+                                                                            <label class="fw-bold" for="delete-age">Age:</label>
+                                                                        </div>
+                                                                        <div class="mb-2">
+                                                                            <input type="number" name="age" th:value="*{age}" id="delete-age" disabled />
+                                                                        </div>
+                                                                        <div class="mb-1">
+                                                                            <label class="fw-bold">Role</label>
+                                                                        </div>
+                                                                        <div class="mb-2">
+                                                                            <select class="form-select"
+                                                                                    aria-label="Role selection"
+                                                                                    id="delete-roles"
+                                                                                    name="roles" multiple="multiple" size="2" disabled>
+                                                                                <option th:each="r : ${roleList}"
+                                                                                        th:value="${r.id}"
+                                                                                        th:text="${r.roleName}"
+                                                                                        th:selected="${user.roles.contains(r)}">
+                                                                                </option>
+                                                                            </select>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="modal-footer">
+                                                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                                                    <button type="submit" class="btn btn-primary">Delete</button>
+                                                                </div>
+                                                            </div>
+                                                        </form>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                        <div class="tab-pane fade" id="newuser" role="tabpanel" aria-labelledby="newuser-tab">
+                            <div class="container-fluid">
+                                <div class="container-fluid bg-light">
+                                    <div class="col-2 my-2 ">
+                                        <h5 class="fw-bold ">Add new user</h5>
+                                    </div>
+                                </div>
+                                <div class="container-fluid text-center bg-white">
+                                    <div class="row justify-content-center">
+                                        <div class="col-3 my-2 ">
+                                            <form th:method="POST" th:action="@{/admin/create}" th:object="${user}">
+                                                <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
+                                                <div class="mb-1">
+                                                    <label class="fw-bold" for="new-username">Username:</label>
+                                                </div>
+                                                <div class="mb-2">
+                                                    <input type="text" name="username"  id="new-username" required/>
+                                                </div>
+                                                <div class="mb-1">
+                                                    <label class="fw-bold" for="new-userPassword">Password:</label>
+                                                </div>
+                                                <div class="mb-2">
+                                                    <input type="password" th:field="*{password}" id="new-userPassword" required/>
+                                                </div>
+                                                <div class="mb-1">
+                                                    <label class="fw-bold" for="new-email">Email:</label>
+                                                </div>
+                                                <div class="mb-2">
+                                                    <input type="text" name="email" id="new-email" required />
+                                                </div>
+                                                <div class="mb-1">
+                                                    <label class="fw-bold" for="new-age">Age:</label>
+                                                </div>
+                                                <div class="mb-2">
+                                                    <input type="number" class="form-control" min="0" max="120" name="age" id="new-age" required />
+                                                </div>
+                                                <div class="mb-1">
+                                                    <label class="fw-bold">Role</label>
+                                                </div>
+                                                <div class="mb-2">
+                                                    <select class="form-control"
+                                                            aria-label="Role selection"
+                                                            id="new-roles"
+                                                            name="roles" multiple="multiple" size="2">
+                                                        <option th:each="r : ${roleList}"
+                                                                th:value="${r.id}"
+                                                                th:text="${r.roleName}">
+                                                        </option>
+                                                    </select>
+                                                </div>
+                                                <div class="my-3">
+                                                    <button type="submit" class="btn btn-success">Add new user</button>
+                                                </div>
+                                            </form>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="tab-pane fade" id="v-pills-user" role="tabpanel" aria-labelledby="v-pills-user-tab" tabindex="0">
+                    <div class="col-6 mt-3">
+                        <p class="fw-bold display-6">User information page</p>
+                    </div>
+                    <div class="container-fluid">
+                        <div class="row ">
+                            <div class="col-2 mt-2">
+                                <h4 class="fw-bold ">About user</h4>
+                            </div>
+                        </div>
+
+                        <div class="row ">
+                            <div class="col-12">
+                                <table class="table table-striped bg-white border">
+                                    <thead>
+                                    <tr>
+                                        <th>Id</th>
+                                        <th>Username</th>
+                                        <th>Age</th>
+                                        <th>Email</th>
+                                        <th>Role</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    <tr>
+                                        <td th:utext="${currentUser.id}">...</td>
+                                        <td th:utext="${currentUser.username}">...</td>
+                                        <td th:utext="${currentUser.email}">...</td>
+                                        <td th:utext="${currentUser.age}">...</td>
+                                        <td> <span th:each="role : ${currentUser.roles}"
+                                                   th:text="${role.roleName.replaceFirst('ROLE_', '  ')}">
+                                                 </span>
+                                        </td>
+                                    </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+
+
+
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous">
+</script>
+</body>
+</html>

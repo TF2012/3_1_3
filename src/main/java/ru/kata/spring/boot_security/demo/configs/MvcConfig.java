@@ -14,6 +14,7 @@ public class MvcConfig implements WebMvcConfigurer {
         registry.addViewController("/").setViewName("welcome");
     }
 
+
     @Override
     public void configurePathMath(PathMatchConfigurer configurer) {
         configurer.setUseTrailingSlashMatch(true);

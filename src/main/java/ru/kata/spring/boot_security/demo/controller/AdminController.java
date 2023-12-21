@@ -33,7 +33,7 @@ public class AdminController {
         map.addAttribute("roles", roles);
         map.addAttribute("currentuser", currentUsers.orElseThrow(
                 () -> new UsernameNotFoundException("Principal user not found")
-        ))
+        ));
         return "admin";
     }
 

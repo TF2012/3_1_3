@@ -32,7 +32,6 @@ public class UserServiceImpl implements UserService {
         return userRepository.findById(id);
     }
 
-    @Override
     @Transactional
     public Optional<User> getByIdForUpdate(Long id) {
         Optional<User> user = getById(id);
@@ -53,6 +52,7 @@ public class UserServiceImpl implements UserService {
     @Transactional
     public void addUser(User user) {
         user.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
+        userRepository.save(user);
     }
 
     @Override

@@ -11,7 +11,7 @@ import ru.kata.spring.boot_security.demo.repository.UserRepository;
 
 import java.util.stream.Collectors;
 
-@Service
+@Service("userDetailsServiceImpl")
 public class UserDetailsServiceImpl implements UserDetailsService {
     public final UserRepository userRepository;
 
@@ -22,8 +22,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         User user = userRepository.findByUserName(username).orElseThrow(
                 () -> new UsernameNotFoundException("User with this name nit found"));
-                return new org.springframework.security.core.userdetails.User(user.getUsername(), user.getPassword(), user.getRoles().stream().map(
-                        role -> new SimpleGrantedAuthority(role.getRoleName())).collect(Collectors.toList()));
-
+        return new org.springframework.security.core.userdetails.User(user.getUsername(), user.getPassword(), user.getRoles().stream().map(
+                role -> new SimpleGrantedAuthority(role.getRoleName())).collect(Collectors.toList()));
     }
 }

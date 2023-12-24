@@ -22,11 +22,11 @@ public class UserController {
 
     @GetMapping()
     public String getUser(ModelMap map, Principal principal) {
-        Optional<User> currentUser = userService.getByUserName(principal.getName());
+        Optional<User> currentUser = userService.getByUsername(principal.getName());
         if (currentUser.isEmpty()) {
             return "notfound";
         }
-        map.addAttribute("currentuser", currentUser.orElseThrow(
+        map.addAttribute("currentUser", currentUser.orElseThrow(
                 () -> new UsernameNotFoundException("Principal user not found")
         ));
         return "user";

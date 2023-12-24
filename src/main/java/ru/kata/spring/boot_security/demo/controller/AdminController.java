@@ -26,12 +26,12 @@ public class AdminController {
 
     @GetMapping()
     public String getUsers(@ModelAttribute("user")User user, ModelMap map, Principal principal) {
-        Optional<User> currentUsers = userService.getByUserName(principal.getName());
+        Optional<User> currentUsers = userService.getByUsername(principal.getName());
         List<User> users = userService.getUsers();
         List<Role> roles = roleService.getRoles();
         map.addAttribute("users", users);
         map.addAttribute("roles", roles);
-        map.addAttribute("currentuser", currentUsers.orElseThrow(
+        map.addAttribute("currentUser", currentUsers.orElseThrow(
                 () -> new UsernameNotFoundException("Principal user not found")
         ));
         return "admin";

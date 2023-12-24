@@ -2,7 +2,7 @@ package ru.kata.spring.boot_security.demo.model;
 
 import jakarta.persistence.*;
 
-import java.util.List;
+import java.util.Set;
 import java.util.Objects;
 
 @Entity
@@ -17,15 +17,16 @@ public class User {
     private String email;
     private Integer age;
 
-    @ManyToMany(fetch = FetchType.LAZY)
-    @JoinTable(name = "roles_users", joinColumns = @JoinColumn(name = "users_id"),
+    @ManyToMany
+    @JoinTable(name = "roles_users",
+            joinColumns = @JoinColumn(name = "users_id"),
             inverseJoinColumns = @JoinColumn(name = "roles_id"))
-    private List<Role> roles;
+    private Set<Role> roles;
 
     public User() {
     }
 
-    public User(String username, String password, String email, Integer age, List<Role> roles) {
+    public User(String username, String password, String email, Integer age, Set<Role> roles) {
         this.username = username;
         this.password = password;
         this.email = email;
@@ -69,11 +70,11 @@ public class User {
         this.age = age;
     }
 
-    public List<Role> getRoles() {
+    public Set<Role> getRoles() {
         return roles;
     }
 
-    public void setRoles(List<Role> roles) {
+    public void setRoles(Set<Role> roles) {
         this.roles = roles;
     }
 

@@ -74,8 +74,8 @@
                                     <tr th:each="user : ${users}">
                                         <td th:utext="${user.id}">...</td>
                                         <td th:utext="${user.username}">...</td>
-                                        <td th:utext="${user.email}">...</td>
                                         <td th:utext="${user.age}">...</td>
+                                        <td th:utext="${user.email}">...</td>
                                         <td> <span th:each="role : ${user.roles}"
                                                    th:text="${role.roleName.replaceFirst('ROLE_', '  ')}">
                                                 </span>

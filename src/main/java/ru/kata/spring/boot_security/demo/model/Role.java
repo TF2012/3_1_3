@@ -1,6 +1,6 @@
 package ru.kata.spring.boot_security.demo.model;
 
-import jakarta.persistence.*;
+import javax.persistence.*;
 
 @Entity
 @Table(name = "roles")

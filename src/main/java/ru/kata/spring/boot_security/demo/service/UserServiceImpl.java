@@ -24,7 +24,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
         this.bCryptPasswordEncoder = bCryptPasswordEncoder;
     }
 
-    @Transactional(readOnly = true)
+
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         User user = userRepository.findByUsername(username).orElseThrow(
@@ -35,18 +35,16 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     }
 
     @Override
-    @Transactional(readOnly = true)
     public Optional<User> getByUsername(String userName) {
         return userRepository.findByUsername(userName);
     }
 
     @Override
-    @Transactional
     public Optional<User> getById(Long id) {
         return userRepository.findById(id);
     }
 
-    @Transactional
+
     public Optional<User> getByIdForUpdate(Long id) {
         Optional<User> user = getById(id);
         if (user.isEmpty()) {
@@ -57,7 +55,6 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     }
 
     @Override
-    @Transactional(readOnly = true)
     public List<User> getUsers() {
         return userRepository.findAll();
     }
